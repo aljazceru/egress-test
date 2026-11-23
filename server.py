@@ -29,6 +29,12 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == "/health":
             return self._json({"status": "ok"})
+        if self.path.startswith("/fetch"):
+            from urllib.parse import urlparse, parse_qs
+            url = parse_qs(urlparse(self.path).query).get("url", [""])[0]
+            if not url.startswith("http"):
+                return self._json({"error": "url param required"}, 400)
+            return self._json(probe(url, timeout=8))
         if self.path == "/egress":
             return self._json({
                 "public_internet": probe("https://api.ipify.org?format=json"),
