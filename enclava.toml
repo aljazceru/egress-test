@@ -1,0 +1,28 @@
+[app]
+name = "egress-test"
+port = 8080
+command = ["python3", "/app/server.py"]
+
+[storage]
+paths = []
+size = "1Gi"
+tls_size = "1Gi"
+
+[unlock]
+mode = "password"
+
+[resources]
+cpu = "1"
+memory = "512Mi"
+
+[health]
+path = "/health"
+interval = 30
+timeout = 5
+
+# Outbound network, fixed when the app is created. The default "restricted"
+# mode reaches only platform endpoints plus the allowlist below.
+# "public_internet" reaches any public IPv4 address (private ranges stay
+# blocked; there is no general IPv6 egress).
+[egress]
+mode = "public_internet"
